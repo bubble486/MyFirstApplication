@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Log.v("试一试","不好玩");
+        Log.v("试一试","不好玩");
 
         setContentView(R.layout.activity_main);
         textViewHelloWorld= this.findViewById(R.id.text_hello_world);
