@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyFristApplication</string>
+    <string name="app_name1">我的第一个应用</string>
+    <string name="string_hello_world">我喜欢Android开发</string>
+</resources>
