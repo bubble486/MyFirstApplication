@@ -13,21 +13,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v("试一试","不好玩");
-
         setContentView(R.layout.activity_main);
-        textViewHelloWorld= this.findViewById(R.id.text_hello_world);
+//        通过id找到TextView
+        textViewHelloWorld= this.findViewById(R.id.text_view_hello_world);
 
         String strHelloWorld = textViewHelloWorld.getText().toString();
         Log.i("MainActivity",strHelloWorld);
 
-        textViewHelloWorld.setText("text");
-        textViewHelloWorld.setText(R.string.string_hello_world);
+        textViewHelloWorld.setText(R.string.hello_android);
 
-
-
-        String stringHelloWorld = this.getResources().getText(R.string.app_name1).toString();
-        Log.i("MainActivity","nihao");
+        String stringHelloWorld = this.getResources().getText(R.string.string_hello_world).toString();
         textViewHelloWorld.setText(stringHelloWorld);
     }
 }
