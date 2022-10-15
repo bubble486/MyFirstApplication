@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">MyFirstApplication</string>
     <string name="app_name1">我的第一个应用</string>
-    <string name="string_hello_world">我喜欢Android开发</string>
-    <string name="hello_android">你好Android</string>
-    <string name="string_chinese">中文按钮</string>
-    <string name="string_english">English</string>
+    <string name="string_hello">hello</string>
+    <string name="string_chinese">change text</string>
+    <string name="string_world">world</string>
 </resources>

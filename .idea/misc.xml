@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/MyFirstApplication/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2125" />
         <entry key="..\:/MyFirstApplication/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/MyFirstApplication/app/src/main/res/layout/item_main.xml" value="0.24947916666666667" />
         <entry key="..\:/MyFristApplication/app/src/main/res/layout/activity_main.xml" value="0.16799999999999998" />
         <entry key="..\:/MyFristApplication/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2265" />
       </map>
