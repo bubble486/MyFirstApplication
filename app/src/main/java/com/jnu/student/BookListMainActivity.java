@@ -2,20 +2,29 @@ package com.jnu.student;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.helper.widget.Carousel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class BookListMainActivity extends AppCompatActivity {
 
-//    private TextView textViewHello;
+    public static final int MENU_ID_ADD = 1;
+    public static final int MENU_ID_UPDATE = 2;
+    public static final int MENU_ID_DELETE = 3;
+
+    //    private TextView textViewHello;
 //    private TextView textViewWorld;
     static class Book{
         private final String title;
@@ -75,6 +84,23 @@ public class BookListMainActivity extends AppCompatActivity {
 ////        buttonEnglish.setOnClickListener(listener);
     }
 
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case MENU_ID_ADD:
+                Toast.makeText(this,"item add "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
+                break;
+            case MENU_ID_UPDATE:
+                Toast.makeText(this,"item update "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
+                break;
+            case MENU_ID_DELETE:
+                Toast.makeText(this,"item delete "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
+                break;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
     public static class MainRecycleViewAdapter extends RecyclerView.Adapter<MainRecycleViewAdapter.ViewHolder> {
 
         private final ArrayList<Book> localDataSet;
@@ -83,7 +109,7 @@ public class BookListMainActivity extends AppCompatActivity {
          * Provide a reference to the type of views that you are using
          * (custom ViewHolder).
          */
-        public static class ViewHolder extends RecyclerView.ViewHolder {
+        public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
             private final TextView textView;
             private final ImageView imageViewImage;
 
@@ -92,12 +118,22 @@ public class BookListMainActivity extends AppCompatActivity {
                 // Define click listener for the ViewHolder's View
                 imageViewImage = view.findViewById(R.id.image_view_book_cover);
                 textView = (TextView) view.findViewById(R.id.text_view_book_title);
+
+                view.setOnCreateContextMenuListener(this);
             }
 
             public TextView getTextView() {
                 return textView;
             }
             public ImageView getImageViewImage() { return imageViewImage; }
+
+            @Override
+            public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                contextMenu.add(0,MENU_ID_ADD,getAdapterPosition(),"Add "+getAdapterPosition());
+                contextMenu.add(0,MENU_ID_UPDATE,getAdapterPosition(),"Update "+getAdapterPosition());
+                contextMenu.add(0,MENU_ID_DELETE,getAdapterPosition(),"Delete "+getAdapterPosition());
+
+            }
         }
 
         /**
@@ -124,7 +160,6 @@ public class BookListMainActivity extends AppCompatActivity {
         // Replace the contents of a view (invoked by the layout manager)
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-
             // Get element from your dataset at this position and replace the
             // contents of the view with that element
 //            viewHolder.getTextView().setText(localDataSet.get(position));
