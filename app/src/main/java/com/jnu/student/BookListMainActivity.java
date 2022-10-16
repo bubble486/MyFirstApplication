@@ -1,20 +1,23 @@
 package com.jnu.student;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.helper.widget.Carousel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jnu.student.data.Book;
 
 import java.util.ArrayList;
 
@@ -23,25 +26,16 @@ public class BookListMainActivity extends AppCompatActivity {
     public static final int MENU_ID_ADD = 1;
     public static final int MENU_ID_UPDATE = 2;
     public static final int MENU_ID_DELETE = 3;
+    public ArrayList<Book> BookItems;
+    private MainRecycleViewAdapter mainRecycleViewAdapter;
 
     //    private TextView textViewHello;
 //    private TextView textViewWorld;
-    static class Book{
-        private final String title;
-//        private final String coverResource;
-
-        Book(String title){
-            this.title = title;
-//            this.coverResource = coverResource;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ArrayList<Book> mainBookSet;
 
         //找到recyclerView对象
         RecyclerView recyclerViewMain=findViewById(R.id.recycleview_main);
@@ -50,17 +44,14 @@ public class BookListMainActivity extends AppCompatActivity {
 //        RecyclerView 中的列表项由 LayoutManager 类负责排列
         recyclerViewMain.setLayoutManager(linearLayoutManager);
 
-        Book book1 = new Book("信息安全数学基础(第2版）");
-        Book book2 = new Book("软件项目管理案例教程（第2版）");
-        Book book3 = new Book("创新工程实践");
-        mainBookSet = new ArrayList<>();
-        mainBookSet.add(book1);
-        mainBookSet.add(book2);
-        mainBookSet.add(book3);
+        BookItems = new ArrayList<>();
+        BookItems.add(new Book("信息安全数学基础(第2版）",R.drawable.book_1));
+        BookItems.add(new Book("软件项目管理案例教程（第2版）",R.drawable.book_2));
+        BookItems.add(new Book("创新工程实践",R.drawable.book_no_name));
 
 
 //      传递数据并创建Adapter对象，并绑定到RecycleView
-        MainRecycleViewAdapter mainRecycleViewAdapter = new MainRecycleViewAdapter(mainBookSet);
+        mainRecycleViewAdapter = new MainRecycleViewAdapter(BookItems);
         recyclerViewMain.setAdapter(mainRecycleViewAdapter);
 
 ////        通过id找到TextView
@@ -88,13 +79,33 @@ public class BookListMainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case MENU_ID_ADD:
-                Toast.makeText(this,"item add "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
+//                Toast.makeText(this,"item add "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
+                BookItems.add(item.getOrder(),new Book("added",R.drawable.ic_launcher_background));
+                mainRecycleViewAdapter.notifyItemInserted(item.getOrder());
                 break;
             case MENU_ID_UPDATE:
-                Toast.makeText(this,"item update "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
+//                Toast.makeText(this,"item update "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
+                BookItems.get(item.getOrder()).setTitle("Updated 486");
+                mainRecycleViewAdapter.notifyItemChanged(item.getOrder());
                 break;
             case MENU_ID_DELETE:
-                Toast.makeText(this,"item delete "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
+                AlertDialog alertDialog = new AlertDialog.Builder(this)
+                        .setTitle(R.string.string_confirmation)
+                        .setMessage(R.string.sure_to_delete)
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        }).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                BookItems.remove(item.getOrder());
+                                mainRecycleViewAdapter.notifyItemRemoved(item.getOrder());
+                            }
+                        }).create();
+                alertDialog.show();
+//                Toast.makeText(this,"item delete "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
                 break;
         }
 
@@ -163,13 +174,8 @@ public class BookListMainActivity extends AppCompatActivity {
             // Get element from your dataset at this position and replace the
             // contents of the view with that element
 //            viewHolder.getTextView().setText(localDataSet.get(position));
-            viewHolder.getTextView().setText(localDataSet.get(position).title);
-            if(position==0)
-                viewHolder.getImageViewImage().setImageResource( R.drawable.book_1 );
-            if (position==1)
-                viewHolder.getImageViewImage().setImageResource( R.drawable.book_2 );
-            if (position==2)
-                viewHolder.getImageViewImage().setImageResource( R.drawable.book_no_name );
+            viewHolder.getTextView().setText(localDataSet.get(position).getTitle());
+            viewHolder.getImageViewImage().setImageResource( localDataSet.get(position).getResourceId());
 
         }
 
