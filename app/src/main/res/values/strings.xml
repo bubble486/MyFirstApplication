@@ -8,4 +8,6 @@
     <string name="sure_to_delete">Are you sure to delete this item?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="ok">OK</string>
+    <string name="name">Name</string>
 </resources>
