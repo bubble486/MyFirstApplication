@@ -1,5 +1,9 @@
 package com.jnu.student;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.ActivityResultRegistry;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -28,6 +33,20 @@ public class BookListMainActivity extends AppCompatActivity {
     public static final int MENU_ID_DELETE = 3;
     public ArrayList<Book> BookItems;
     private MainRecycleViewAdapter mainRecycleViewAdapter;
+
+    private ActivityResultLauncher<Intent> addDateLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result ->{
+                if (null!=result){
+                    Intent intent=result.getData();
+                    if (result.getResultCode() == InputBookItemActivity.RESULT_CODE_SUCCESS) {
+                        Bundle bundle=intent.getExtras();
+                        String title=bundle.getString("title");
+                        BookItems.add(1,new Book(title,R.drawable.ic_launcher_background));
+                        mainRecycleViewAdapter.notifyItemInserted(1);
+                    }
+//                    BookItems.add(item.getOrder(),new Book("added",R.drawable.ic_launcher_background));
+                }
+            });
 
     //    private TextView textViewHello;
 //    private TextView textViewWorld;
@@ -54,25 +73,6 @@ public class BookListMainActivity extends AppCompatActivity {
         mainRecycleViewAdapter = new MainRecycleViewAdapter(BookItems);
         recyclerViewMain.setAdapter(mainRecycleViewAdapter);
 
-////        通过id找到TextView
-//        textViewHello = this.findViewById(R.id.text_view_hello);
-//        textViewWorld = this.findViewById(R.id.text_view_world);
-//        Button buttonExchange = this.findViewById(R.id.button_exchange);
-//
-////        String stringHelloWorld = this.getResources().getText(R.string.string_hello).toString();
-////        textViewHello.setText(stringHelloWorld);
-//
-//        buttonExchange.setOnClickListener(new View.OnClickListener() {
-////            匿名类只用一次不想取名字，父类是View.OnClickListener
-//            @Override
-//            public void onClick(View view) {
-//                Log.i("test","hello");
-////                textViewHello.setText(getText(R.string.string_chinese).toString());
-//            }
-//        });
-//        ClickListener listener = new ClickListener();
-//        buttonExchange.setOnClickListener(listener);
-////        buttonEnglish.setOnClickListener(listener);
     }
 
     @Override
@@ -80,8 +80,9 @@ public class BookListMainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case MENU_ID_ADD:
 //                Toast.makeText(this,"item add "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
-                BookItems.add(item.getOrder(),new Book("added",R.drawable.ic_launcher_background));
-                mainRecycleViewAdapter.notifyItemInserted(item.getOrder());
+                Intent intent = new Intent(this, InputBookItemActivity.class);
+                addDateLauncher.launch(intent);
+
                 break;
             case MENU_ID_UPDATE:
 //                Toast.makeText(this,"item update "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
@@ -186,24 +187,4 @@ public class BookListMainActivity extends AppCompatActivity {
         }
     }
 
-
-
-//    private class ClickListener implements View.OnClickListener {
-//        @Override
-//        public void onClick(View clickedButtonView) {
-////            安卓对于按钮的大小写有自己的处理
-////            textViewHello.setText(((Button)clickedButtonView).getText());
-////            Log.v("test",((Button)clickedButtonView).getText().toString());
-////            按动两个按钮之后可以获取按钮上面的文字
-////            if(clickedButtonView== buttonExchange){
-////                textViewHello.setText(R.string.string_chinese);
-////            }
-////            else if(clickedButtonView==buttonEnglish){
-////                textViewHelloWorld.setText(R.string.string_english);
-////            }
-//            String temp = textViewHello.getText().toString();
-//            textViewHello.setText(textViewWorld.getText().toString());
-//            textViewWorld.setText(temp);
-//        }
-//    }
 }
