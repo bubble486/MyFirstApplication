@@ -20,7 +20,7 @@
                 android:id="@+id/text_view_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title"
+                android:text="图书名称"
                 tools:layout_editor_absoluteX="83dp"
                 tools:layout_editor_absoluteY="181dp" />
 
@@ -40,7 +40,13 @@
             android:id="@+id/button_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ok"></Button>
+            android:text="@string/ok" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"/>
 
     </LinearLayout>
 

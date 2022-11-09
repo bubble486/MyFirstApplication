@@ -14,7 +14,7 @@
         android:theme="@style/Theme.MyFirstApplication"
         tools:targetApi="31">
         <activity
-            android:name=".InputBookItemActivity"
+            android:name=".EditBookActivity"
             android:exported="false" />
         <activity
             android:name=".BookListMainActivity"

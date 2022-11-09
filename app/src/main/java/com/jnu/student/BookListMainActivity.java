@@ -1,8 +1,6 @@
 package com.jnu.student;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.ActivityResultRegistry;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -20,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jnu.student.data.Book;
 
@@ -34,15 +31,31 @@ public class BookListMainActivity extends AppCompatActivity {
     public ArrayList<Book> BookItems;
     private MainRecycleViewAdapter mainRecycleViewAdapter;
 
-    private ActivityResultLauncher<Intent> addDateLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+    private final ActivityResultLauncher<Intent> addDataLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result ->{
                 if (null!=result){
                     Intent intent=result.getData();
-                    if (result.getResultCode() == InputBookItemActivity.RESULT_CODE_SUCCESS) {
+                    if (result.getResultCode() == EditBookActivity.RESULT_CODE_SUCCESS) {
                         Bundle bundle=intent.getExtras();
                         String title=bundle.getString("title");
-                        BookItems.add(1,new Book(title,R.drawable.ic_launcher_background));
-                        mainRecycleViewAdapter.notifyItemInserted(1);
+                        int position=bundle.getInt("position");
+                        BookItems.add(position,new Book(title,R.drawable.book_no_name));
+                        mainRecycleViewAdapter.notifyItemInserted(position);
+                    }
+//                    BookItems.add(item.getOrder(),new Book("added",R.drawable.ic_launcher_background));
+                }
+            });
+    private final ActivityResultLauncher<Intent> updateDataLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result ->{
+                if (null!=result){
+                    Intent intent=result.getData();
+                    if (result.getResultCode() == EditBookActivity.RESULT_CODE_SUCCESS) {
+                        Bundle bundle=intent.getExtras();
+                        String title=bundle.getString("title");
+                        int position=bundle.getInt("position");
+                        BookItems.get(position).setTitle(title);
+                        mainRecycleViewAdapter.notifyItemChanged(position);
+
                     }
 //                    BookItems.add(item.getOrder(),new Book("added",R.drawable.ic_launcher_background));
                 }
@@ -52,7 +65,7 @@ public class BookListMainActivity extends AppCompatActivity {
 //    private TextView textViewWorld;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -79,15 +92,16 @@ public class BookListMainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case MENU_ID_ADD:
-//                Toast.makeText(this,"item add "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(this, InputBookItemActivity.class);
-                addDateLauncher.launch(intent);
-
+                Intent intent = new Intent(this, EditBookActivity.class);
+                intent.putExtra("position",item.getOrder());
+                addDataLauncher.launch(intent);
                 break;
             case MENU_ID_UPDATE:
 //                Toast.makeText(this,"item update "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
-                BookItems.get(item.getOrder()).setTitle("Updated 486");
-                mainRecycleViewAdapter.notifyItemChanged(item.getOrder());
+                Intent intentUpdate = new Intent(this, EditBookActivity.class);
+                intentUpdate.putExtra("position",item.getOrder());
+                intentUpdate.putExtra("title",BookItems.get(item.getOrder()).getTitle());
+                updateDataLauncher.launch(intentUpdate);
                 break;
             case MENU_ID_DELETE:
                 AlertDialog alertDialog = new AlertDialog.Builder(this)
@@ -106,10 +120,8 @@ public class BookListMainActivity extends AppCompatActivity {
                             }
                         }).create();
                 alertDialog.show();
-//                Toast.makeText(this,"item delete "+item.getOrder()+" clicked!",Toast.LENGTH_LONG).show();
                 break;
         }
-
         return super.onContextItemSelected(item);
     }
 
@@ -141,9 +153,9 @@ public class BookListMainActivity extends AppCompatActivity {
 
             @Override
             public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-                contextMenu.add(0,MENU_ID_ADD,getAdapterPosition(),"Add "+getAdapterPosition());
-                contextMenu.add(0,MENU_ID_UPDATE,getAdapterPosition(),"Update "+getAdapterPosition());
-                contextMenu.add(0,MENU_ID_DELETE,getAdapterPosition(),"Delete "+getAdapterPosition());
+                contextMenu.add(0,MENU_ID_ADD,getAdapterPosition(),"新建 "+getAdapterPosition());
+                contextMenu.add(0,MENU_ID_UPDATE,getAdapterPosition(),"修改 "+getAdapterPosition());
+                contextMenu.add(0,MENU_ID_DELETE,getAdapterPosition(),"删除 "+getAdapterPosition());
 
             }
         }
