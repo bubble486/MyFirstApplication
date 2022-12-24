@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jnu.student.data.Book;
+import com.jnu.student.data.DataSaver;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,7 @@ public class BookListMainActivity extends AppCompatActivity {
                         String title=bundle.getString("title");
                         int position=bundle.getInt("position");
                         BookItems.add(position,new Book(title,R.drawable.book_no_name));
+                        new DataSaver().Save(this,BookItems);
                         mainRecycleViewAdapter.notifyItemInserted(position);
                     }
 //                    BookItems.add(item.getOrder(),new Book("added",R.drawable.ic_launcher_background));
@@ -54,6 +56,7 @@ public class BookListMainActivity extends AppCompatActivity {
                         String title=bundle.getString("title");
                         int position=bundle.getInt("position");
                         BookItems.get(position).setTitle(title);
+                        new DataSaver().Save(this,BookItems);
                         mainRecycleViewAdapter.notifyItemChanged(position);
 
                     }
@@ -76,10 +79,16 @@ public class BookListMainActivity extends AppCompatActivity {
 //        RecyclerView 中的列表项由 LayoutManager 类负责排列
         recyclerViewMain.setLayoutManager(linearLayoutManager);
 
-        BookItems = new ArrayList<>();
-        BookItems.add(new Book("信息安全数学基础(第2版）",R.drawable.book_1));
-        BookItems.add(new Book("软件项目管理案例教程（第2版）",R.drawable.book_2));
-        BookItems.add(new Book("创新工程实践",R.drawable.book_no_name));
+        DataSaver dataSaver = new DataSaver();
+        BookItems = dataSaver.Load(this);
+
+        if(BookItems.size() == 0){
+            BookItems = new ArrayList<>();
+            BookItems.add(new Book("信息安全数学基础(第2版）",R.drawable.book_1));
+        }
+
+//        BookItems.add(new Book("软件项目管理案例教程（第2版）",R.drawable.book_2));
+//        BookItems.add(new Book("创新工程实践",R.drawable.book_no_name));
 
 
 //      传递数据并创建Adapter对象，并绑定到RecycleView
@@ -116,6 +125,7 @@ public class BookListMainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 BookItems.remove(item.getOrder());
+                                new DataSaver().Save(BookListMainActivity.this,BookItems);
                                 mainRecycleViewAdapter.notifyItemRemoved(item.getOrder());
                             }
                         }).create();
