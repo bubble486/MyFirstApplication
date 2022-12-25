@@ -49,6 +49,8 @@ public class BookListMainActivity extends AppCompatActivity {
             switch (position){
                 case 0:
                     return BookItemFragment.newInstance();
+                case 1:
+                    return BaiduMapFragment.newInstance();
                 case 2:
                     return BrowserFragment.newInstance();
             }
@@ -77,7 +79,7 @@ public class BookListMainActivity extends AppCompatActivity {
                         tab.setText(R.string.Books);
                         break;
                     case 1:
-                        tab.setText(R.string.Buyers);
+                        tab.setText("地图");
                         break;
                     case 2:
                         tab.setText(R.string.News);
