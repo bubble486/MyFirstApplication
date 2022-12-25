@@ -11,4 +11,9 @@
     <string name="ok">确定</string>
     <string name="name">Name</string>
     <string name="cancel">取消</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Books">图书</string>
+    <string name="News">新闻</string>
+    <string name="Buyers">卖家</string>
 </resources>
