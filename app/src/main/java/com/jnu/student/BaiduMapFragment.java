@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.style.AlignmentSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,10 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.jnu.student.data.HttpDataLoader;
+import com.jnu.student.data.ShopLocation;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,14 +78,39 @@ public class BaiduMapFragment extends Fragment {
                 .build();
         mapView.getMap().setMapStatus(MapStatusUpdateFactory.newMapStatus(mapStatus));
 //        添加图标 文字
-        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.jida);
-        OverlayOptions options = new MarkerOptions().position(cenpt).icon(bitmap);
-        mapView.getMap().addOverlay(options);
-        mapView.getMap().addOverlay(new TextOptions()
-                .bgColor(0xAAFFFF00)
-                .fontSize(24)
-                .fontColor(0xFFFF00FF)
-                .text("暨大").position(cenpt));
+//        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.book_no_name);
+//        OverlayOptions options = new MarkerOptions().position(cenpt).icon(bitmap);
+//        mapView.getMap().addOverlay(options);
+//        mapView.getMap().addOverlay(new TextOptions()
+//                .bgColor(0xAAFFFF00).fontSize(32).fontColor(0xFFFF00FF)
+//                .text("jinandaxue").position(cenpt));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpDataLoader dataLoader = new HttpDataLoader();
+                String shopJasonData = dataLoader.getHttpData("http://file.nidama.net/class/mobile_develop/data/bookstore2022.json");
+                List<ShopLocation> locations = dataLoader.ParseJsonData(shopJasonData);
+
+                BaiduMapFragment.this.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.book_no_name);
+                        for (ShopLocation shop:locations) {
+                            LatLng shopPoint = new LatLng(shop.getLatitude(),shop.getLongitude());
+                            OverlayOptions options = new MarkerOptions().position(shopPoint).icon(bitmap);
+                            mapView.getMap().addOverlay(options);
+                            mapView.getMap().addOverlay(new TextOptions()
+                                    .bgColor(0xAAFFFF00).fontSize(32).fontColor(0xFFFF00FF)
+                                    .text(shop.getName()).position(shopPoint));
+                        }
+                    }
+                });
+
+            }
+        }).start();
+
+
         mapView.getMap().setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
