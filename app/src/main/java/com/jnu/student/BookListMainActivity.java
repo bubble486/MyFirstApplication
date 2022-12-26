@@ -53,13 +53,15 @@ public class BookListMainActivity extends AppCompatActivity {
                     return BaiduMapFragment.newInstance();
                 case 2:
                     return BrowserFragment.newInstance();
+                case 3:
+                    return GameFragment.newInstance();
             }
             return BookItemFragment.newInstance();
         }
 
         @Override
         public int getItemCount() {
-            return 3;
+            return 4;
         }
     }
     @Override
@@ -83,6 +85,9 @@ public class BookListMainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         tab.setText(R.string.News);
+                        break;
+                    case 3:
+                        tab.setText("Game");
                         break;
                 }
             }
